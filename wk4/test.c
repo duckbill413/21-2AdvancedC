@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include <string.h>
 
 int main()
 {
-    printf("%c", 'A' + 14);
+    printf("%d", strncmp('adfa', 'badsf', 1));
 }
