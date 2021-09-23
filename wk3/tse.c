@@ -4,8 +4,11 @@
 int main(void)
 {
     int i;
-    char c1[3] = "hi";
-    char c2[3] = "hi";
+    char c1[30] = "";
+    char c2[30] = "go";
 
-    printf("%d", strcmp(c1, c2));
+    strncpy(c1, c2, 2);
+    printf("%s", c1);
+
+    return 0;
 }
