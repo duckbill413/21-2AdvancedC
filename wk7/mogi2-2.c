@@ -29,7 +29,6 @@ int main()
     }
 
     printf("%s\n", re[N - 1]);
-
     for (int i = 0; i < num - 1; i++)
     {
         for (int j = 0; j < num - 1 - i; j++)
