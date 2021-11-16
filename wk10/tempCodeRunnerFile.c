@@ -1,4 +1,6 @@
-for (ST *pst = st; pst < st + N; pst++)
-    {
-        printf("%s %d %d %d %d %d\n", pst->str, pst->cnt, pst->cnt2, pst->num, pst->result1, pst->result2);
-    }
+Coex 0 I 19970513
+Duksugung 2000 O 20000101
+Museum 1500 I 19950323
+Haewoondae 0 O 19940830
+Haetul 2500 B 20010305
+SeaHouse 5500 O 19851201
