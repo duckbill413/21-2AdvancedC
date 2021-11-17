@@ -3,9 +3,9 @@
 
 typedef struct complex
 {
-    double real;
-    double imag;
-    double abs;
+    float real;
+    float imag;
+    float abs;
 } Complex;
 
 Complex add(Complex a, Complex b);
@@ -17,14 +17,14 @@ int main()
     Complex com[3];
 
     for (Complex *pcom = com; pcom < com + 3; pcom++)
-        scanf("%lf %lf", &pcom->real, &pcom->imag);
+        scanf("%f %f", &pcom->real, &pcom->imag);
 
     abs_val(&com[0], &com[1], &com[2]);
     Complex added = add(com[0], com[1]);
     Complex subed = sub(com[0], com[1]);
 
-    printf("%.1lf%+.1lfi\n", added.real, added.imag);
-    printf("%.1lf%+.1lfi", subed.real, subed.imag);
+    printf("%.1f%+.1fi\n", added.real, added.imag);
+    printf("%.1f%+.1fi", subed.real, subed.imag);
 
     return 0;
 }
@@ -64,6 +64,7 @@ void abs_val(struct complex *p1, struct complex *p2, struct complex *p3)
     {
         max = *p3;
     }
+
     if (p1->abs > p2->abs)
     {
         min = *p2;
@@ -72,11 +73,13 @@ void abs_val(struct complex *p1, struct complex *p2, struct complex *p3)
     }
     else if (p1->abs > p3->abs)
     {
-        min = *p2;
+        min = *p3;
     }
 
     *p1 = max;
     *p2 = min;
+    // printf("max: %.1f %.1f\n", p1->real, p1->imag);
+    // printf("min: %.1f %.1f\n", p2->real, p2->imag);
 }
 /*
 2.3 4.5
@@ -86,4 +89,8 @@ void abs_val(struct complex *p1, struct complex *p2, struct complex *p3)
 2.3 4.5
 3.4 5.0
 1.4 -7.2
+
+19.754 23.221
+98.454 -45.221
+21.456 12.333
 */
