@@ -3,23 +3,33 @@
 #include <stdlib.h>
 
 typedef struct people
-{                   //연락처 구조체
-    char name[21];  //이름
-    char phone[16]; //전화번호
-    char birth[9];  //생년월일
+{                //연락처 구조체
+    char *name;  //이름
+    char *phone; //전화번호
+    char *birth; //생년월일
 } People;
 
 void insert(People *pe, int *cnt);
-void sort(People *pe, int *cnt);
-void delete (People *pe, int *cnt);
-void searchBirth(People *pe, int *cnt);
+void sort(People **pe, int *cnt);
+void show(People **pe, int *cnt);
+void delete (People **pe, int *cnt);
+void searchBirth(People **pe, int *cnt);
 
 int main()
 {
-    People pe[100]; // 100명의 정보 저장 가능
+    int max_num;
+    printf("Max_num:"); // 고정
+    scanf("%d", &max_num);
+
+    People **pe = NULL;                                 // 이중 포인터 구조체
+    pe = (People **)malloc(sizeof(People *) * max_num); // max_num의 개수만큼 동적할당
+    if (pe == NULL)
+        return -1;
+
     //안내 인터페이스
     int select;
     int cnt = 0;
+    People **p = pe;
     while (1)
     {
         printf("*****Menu*****\n");
@@ -29,21 +39,26 @@ int main()
         getchar();
         if (select == 1) // Registration
         {
-            if (cnt > 100) //최대 저장 개수 초과
+            if (cnt >= max_num) //입력개수 초과시 입력 불가
             {
                 printf("OVERFLOW\n");
                 continue;
             }
-            insert(pe, &cnt); //자료 입력 및 정렬 수행
+            *p = NULL;
+            *p = (People *)malloc(sizeof(People)); //입력이 예정 되었으므로 동적할당 해준다.
+            //결과적으로 입력된 개수만큼 동적할당이 이루어 진다. 입력개수<=max_num
+            if (*p == NULL) //실패시 종료
+                return -1;
+
+            insert(*p, &cnt); //자료 입력
+            sort(pe, &cnt);
+            p++;
         }
         else if (select == 2) // ShowAll
         {
-            for (int i = 0; i < cnt; i++) //구조체의 모든 멤버를 출력
-            {
-                printf("%s %s %s\n", pe[i].name, pe[i].phone, pe[i].birth);
-            }
+            show(pe, &cnt);
         }
-        else if (select == 3)
+        else if (select == 3) // Delete
         {
             if (cnt == 0) //저장된 정보가 없을때
             {
@@ -52,40 +67,57 @@ int main()
             }
             delete (pe, &cnt);
         }
-        else if (select == 4)
+        else if (select == 4) //생일 월 검색
         {
             searchBirth(pe, &cnt);
         }
-        else if (select == 5)
+        else if (select == 5) // Exit
             break;
     }
+
+    for (int i = 0; i < cnt; i++) //각 정보에 대하여 동적할당 해제
+    {
+        free(pe[i]->name);
+        free(pe[i]->birth);
+        free(pe[i]->phone);
+        free(pe[i]);
+    }
+    free(pe); // max_num 개수만큼 할당한 것에 대하여 동적할당 해제
 }
 
 void insert(People *pe, int *cnt)
 {
+    char name[101] = {0}, phone[101] = {0}, birth[101] = {0};
     printf("Name:"); // 고정
-    scanf("%s", pe[*cnt].name);
+    scanf("%s", name);
     getchar();
     printf("Phone_number:"); // 고정
-    scanf("%s", pe[*cnt].phone);
+    scanf("%s", phone);
     getchar();
     printf("Birth:"); //고정
-    scanf("%s", pe[*cnt].birth);
+    scanf("%s", birth);
     getchar();
+
+    pe->name = (char *)malloc(sizeof(char) * (strlen(name) + 1));
+    pe->phone = (char *)malloc(sizeof(char) * (strlen(phone) + 1));
+    pe->birth = (char *)malloc(sizeof(char) * (strlen(birth) + 1));
+    strcpy(pe->name, name);
+    strcpy(pe->phone, phone);
+    strcpy(pe->birth, birth);
+
     (*cnt)++;                   //인원수 증가
     printf("<< %d >>\n", *cnt); //입력된 인원수
-    sort(pe, cnt);              //오름차순 정렬
 }
 
-void sort(People *pe, int *cnt)
+void sort(People **pe, int *cnt)
 {
     for (int i = 0; i < *cnt - 1; i++) //버블 정렬
     {
         for (int j = 0; j < *cnt - i - 1; j++)
         {
-            if (strcmp(pe[j].name, pe[j + 1].name) > 0) //이름순으로 정렬
+            if (strcmp(pe[j]->name, pe[j + 1]->name) > 0) //이름순으로 정렬
             {
-                People tmp = pe[j];
+                People *tmp = pe[j];
                 pe[j] = pe[j + 1];
                 pe[j + 1] = tmp;
             }
@@ -93,7 +125,12 @@ void sort(People *pe, int *cnt)
     }
 }
 
-void delete (People *pe, int *cnt)
+void show(People **pe, int *cnt)
+{
+    for (People **p = pe; p < pe + *cnt; p++)
+        printf("%s %s %s\n", (*p)->name, (*p)->phone, (*p)->birth);
+}
+void delete (People **pe, int *cnt)
 {
     printf("Name:"); // 고정
     char tmp[21];
@@ -101,22 +138,37 @@ void delete (People *pe, int *cnt)
     getchar();
 
     int found = 0;
-    for (int i = 0; i < *cnt; i++)
+    People **p;
+    for (p = pe; p < pe + *cnt; p++)
     {
-        if (!strcmp(pe[i].name, tmp))
+        if (!strcmp((*p)->name, tmp))
         {
             found = 1;
-        }
-        if (found)
-        {
-            pe[i] = pe[i + 1];
+            break;
         }
     }
+
     if (found)
+    {
+        for (People **q = p; q < pe + *cnt - 1; q++)
+        {
+            (*q)->name = (char *)realloc((*q)->name, sizeof(char) * (strlen((*(q + 1))->name) + 1));
+            (*q)->phone = (char *)realloc((*q)->phone, sizeof(char) * (strlen((*(q + 1))->phone) + 1));
+            (*q)->birth = (char *)realloc((*q)->birth, sizeof(char) * (strlen((*(q + 1))->birth) + 1));
+
+            strcpy((*q)->name, (*(q + 1))->name);
+            strcpy((*q)->phone, (*(q + 1))->phone);
+            strcpy((*q)->birth, (*(q + 1))->birth);
+        }
         (*cnt)--;
+        free(pe[*cnt]->name);
+        free(pe[*cnt]->phone);
+        free(pe[*cnt]->birth);
+        free(pe[*cnt]);
+    }
 }
 
-void searchBirth(People *pe, int *cnt)
+void searchBirth(People **pe, int *cnt)
 {
     printf("Birth:"); // 고정
     int tmp;
@@ -126,41 +178,63 @@ void searchBirth(People *pe, int *cnt)
     for (int i = 0; i < *cnt; i++)
     {
         int month = 0;
-        for (char *search = pe[i].birth + 4; search < pe[i].birth + 6; search++)
+        for (char *search = pe[i]->birth + 4; search < pe[i]->birth + 6; search++)
             month = month * 10 + (*search - '0');
         if (month == tmp)
-            printf("%s %s %s\n", pe[i].name, pe[i].phone, pe[i].birth);
+            printf("%s %s %s\n", pe[i]->name, pe[i]->phone, pe[i]->birth);
     }
 }
 /*
 case1 입력)
-2
 3
 1
-KimEunJoo
-0001112222
-19960101
-1
-LeeEunJoo
-0103332222
-19960202
-1
-HanEunJoo
-0114445555
+Hong
+01111112222
 20000101
-
-case2 입력)
 1
-Kim
-0112223333
-19950101
+KimEunJoo
+222111333
+19960303
+1
+HanGeul
+010222333
+19980101
+
+5
+1
+Hong
+01111112222
+20000101
+1
+KimEunJoo
+222111333
+19960303
+1
+HanGeul
+010222333
+19980101
+1
+Galma
+010019310931305
+19970703
+1
+Mahima
+010023982087
+20030103
+
+3
+1
+HongGilDong
+01111112222
+20000101
+1
+KimJoo
+222111333
+19960303
 1
 Han
-01011112222
-19960302
+010222333
+19980101
 1
-Lee
-0101234567
-19970903
-
+5
 */

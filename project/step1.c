@@ -13,6 +13,7 @@ void insert(People *pe, int *cnt);
 void sort(People *pe, int *cnt);
 void delete (People *pe, int *cnt);
 void searchBirth(People *pe, int *cnt);
+void show(People *pe, int *cnt);
 
 int main()
 {
@@ -38,25 +39,22 @@ int main()
         }
         else if (select == 2) // ShowAll
         {
-            for (int i = 0; i < cnt; i++) //구조체의 모든 멤버를 출력
-            {
-                printf("%s %s %s\n", pe[i].name, pe[i].phone, pe[i].birth);
-            }
+            show(pe, &cnt);
         }
-        else if (select == 3)
+        else if (select == 3) // delete
         {
             if (cnt == 0) //저장된 정보가 없을때
             {
                 printf("NO MEMBER\n");
-                continue;
+                continue; //처음 메뉴로 이동
             }
             delete (pe, &cnt);
         }
-        else if (select == 4)
+        else if (select == 4) //생일월 찾기
         {
             searchBirth(pe, &cnt);
         }
-        else if (select == 5)
+        else if (select == 5) //종료
             break;
     }
 }
@@ -93,42 +91,49 @@ void sort(People *pe, int *cnt)
     }
 }
 
-void delete (People *pe, int *cnt)
+void show(People *pe, int *cnt) //전체 멤버 보기
+{
+    for (int i = 0; i < *cnt; i++)
+    {
+        printf("%s %s %s\n", pe[i].name, pe[i].phone, pe[i].birth); //전체 멤버 출력
+    }
+}
+void delete (People *pe, int *cnt) //멤버 삭제
 {
     printf("Name:"); // 고정
     char tmp[21];
-    scanf("%s", tmp);
+    scanf("%s", tmp); //이름 입력 받기
     getchar();
 
     int found = 0;
     for (int i = 0; i < *cnt; i++)
     {
-        if (!strcmp(pe[i].name, tmp))
+        if (!strcmp(pe[i].name, tmp)) //일치한 이름 존재 할시
         {
             found = 1;
         }
         if (found)
         {
-            pe[i] = pe[i + 1];
+            pe[i] = pe[i + 1]; //존재 부터 끝까지 멤버를 하나씩 당겨온다.
         }
     }
     if (found)
-        (*cnt)--;
+        (*cnt)--; //개수 하나 감소
 }
 
-void searchBirth(People *pe, int *cnt)
+void searchBirth(People *pe, int *cnt) //생일 월 찾기
 {
     printf("Birth:"); // 고정
     int tmp;
-    scanf("%d", &tmp);
+    scanf("%d", &tmp); //생일 값 입력
     getchar();
 
     for (int i = 0; i < *cnt; i++)
     {
         int month = 0;
-        for (char *search = pe[i].birth + 4; search < pe[i].birth + 6; search++)
+        for (char *search = pe[i].birth + 4; search < pe[i].birth + 6; search++) //구조체 생일에 대하여 월 값을 정수로 바꾸어준다.
             month = month * 10 + (*search - '0');
-        if (month == tmp)
+        if (month == tmp) //정수로 바꾼 값이 찾는 월과 일치시 출력
             printf("%s %s %s\n", pe[i].name, pe[i].phone, pe[i].birth);
     }
 }
