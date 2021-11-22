@@ -130,6 +130,7 @@ void show(People **pe, int *cnt)
     for (People **p = pe; p < pe + *cnt; p++)
         printf("%s %s %s\n", (*p)->name, (*p)->phone, (*p)->birth);
 }
+
 void delete (People **pe, int *cnt)
 {
     printf("Name:"); // ∞Ì¡§

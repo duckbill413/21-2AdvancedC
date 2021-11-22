@@ -1,3 +1,4 @@
+//!!동적할당, 자기참조 구조체
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
