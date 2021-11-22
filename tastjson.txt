@@ -5,7 +5,7 @@
     "echoCommand": true,
     "presentation" : { "reveal": "always" },
     "tasks": [
-          //C++ ì»´íŒŒì¼
+          //C++ ÄÄÆÄÀÏ
         {
             "label": "save and compile for C++",
             "command": "g++",
@@ -17,8 +17,8 @@
             ],
             "group": "build",
 
-            //ì»´íŒŒì¼ì‹œ ì—ëŸ¬ë¥¼ í¸ì§‘ê¸°ì— ë°˜ì˜
-            //ì°¸ê³ :   https://code.visualstudio.com/docs/editor/tasks#_defining-a-problem-matcher
+            //ÄÄÆÄÀÏ½Ã ¿¡·¯¸¦ ÆíÁı±â¿¡ ¹İ¿µ
+            //Âü°í:   https://code.visualstudio.com/docs/editor/tasks#_defining-a-problem-matcher
 
             "problemMatcher": {
                 "fileLocation": [
@@ -37,7 +37,7 @@
                 }
             }
         },
-        //C ì»´íŒŒì¼
+        //C ÄÄÆÄÀÏ
         {
             "label": "save and compile for C",
             "command": "gcc",
@@ -49,8 +49,8 @@
             ],
             "group": "build",
 
-            //ì»´íŒŒì¼ì‹œ ì—ëŸ¬ë¥¼ í¸ì§‘ê¸°ì— ë°˜ì˜
-            //ì°¸ê³ :   https://code.visualstudio.com/docs/editor/tasks#_defining-a-problem-matcher
+            //ÄÄÆÄÀÏ½Ã ¿¡·¯¸¦ ÆíÁı±â¿¡ ¹İ¿µ
+            //Âü°í:   https://code.visualstudio.com/docs/editor/tasks#_defining-a-problem-matcher
 
             "problemMatcher": {
                 "fileLocation": [
@@ -69,13 +69,13 @@
                 }
             }
         },
-        // ë°”ì´ë„ˆë¦¬ ì‹¤í–‰(Ubuntu)
+        // ¹ÙÀÌ³Ê¸® ½ÇÇà(Ubuntu)
         // {
         //     "label": "execute",
         //     "command": "${fileDirname}/${fileBasenameNoExtension}",
         //     "group": "test"
         // }
-        // ë°”ì´ë„ˆë¦¬ ì‹¤í–‰(Windows)
+        // ¹ÙÀÌ³Ê¸® ½ÇÇà(Windows)
         {
             "label": "execute",
             "command": "cmd",
@@ -84,6 +84,61 @@
                 "/C", "${fileDirname}\\${fileBasenameNoExtension}"
             ]
     
+        }
+    ]
+}
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//CMake FILE tast.json
+
+{
+    "version": "2.0.0",
+    "runner": "terminal",
+    "type": "shell",
+    "echoCommand": true,
+    "presentation" : { "reveal": "always" },
+    "tasks": [
+          //C++ ÄÄÆÄÀÏ
+        {
+            "label": "compile for C++",
+            "command": "cd ${fileDirname} && cmake . -G \"MinGW Makefiles\" && mingw32-make",
+            "group": "build",
+
+            //ÄÄÆÄÀÏ½Ã ¿¡·¯¸¦ ÆíÁı±â¿¡ ¹İ¿µ
+            //Âü°í:   https://code.visualstudio.com/docs/editor/tasks#_defining-a-problem-matcher
+
+            "problemMatcher": {
+                "fileLocation": [
+                    "relative",
+                    "${workspaceRoot}"
+                ],
+                "pattern": {
+                    // The regular expression. 
+                   //Example to match: helloWorld.c:5:3: warning: implicit declaration of function 'prinft'
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        // ¹ÙÀÌ³Ê¸® ½ÇÇà(Windows)
+        {
+            "label": "execute",
+            "command": "cmd",
+            "group": "test",
+            "args": [
+                "/C", "${fileDirname}\\${fileDirnameBasename}"
+            ]
         }
     ]
 }

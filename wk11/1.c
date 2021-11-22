@@ -47,6 +47,7 @@ int main()
 }
 
 /*
+test case)
 5
 jacob 31
 kim 41
@@ -55,4 +56,13 @@ park 61
 jane 71
 60 75
 ja lz
+
+result)
+park 61
+jane 71
+*****
+jacob 31
+kim 41
+lee 51
+jane 71
 */
