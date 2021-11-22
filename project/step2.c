@@ -29,7 +29,6 @@ int main()
     //안내 인터페이스
     int select;
     int cnt = 0;
-    People **p = pe;
     while (1)
     {
         printf("*****Menu*****\n");
@@ -44,15 +43,14 @@ int main()
                 printf("OVERFLOW\n");
                 continue;
             }
-            *p = NULL;
-            *p = (People *)malloc(sizeof(People)); //입력이 예정 되었으므로 동적할당 해준다.
+            *(pe + cnt) = NULL;
+            *(pe + cnt) = (People *)malloc(sizeof(People)); //입력이 예정 되었으므로 동적할당 해준다.
             //결과적으로 입력된 개수만큼 동적할당이 이루어 진다. 입력개수<=max_num
-            if (*p == NULL) //실패시 종료
+            if (*(pe + cnt) == NULL) //실패시 종료
                 return -1;
 
-            insert(*p, &cnt); //자료 입력
+            insert(*(pe + cnt), &cnt); //자료 입력
             sort(pe, &cnt);
-            p++;
         }
         else if (select == 2) // ShowAll
         {
@@ -238,4 +236,55 @@ Han
 19980101
 1
 5
+
+5
+1
+Hong
+01111112222
+20000101
+1
+KimEunJoo
+222111333
+19960303
+1
+HanGeul
+010222333
+19980101
+1
+Galma
+010019310931305
+19970703
+1
+Mahima
+010023982087
+20030103
+2
+4
+3
+4
+1
+2
+1
+2
+4
+7
+2
+3
+Hangeul
+2
+3
+Mahima
+2
+3
+Galma
+2
+1
+naheun
+010389292838
+19900430
+2
+1
+Anna
+01092833394
+19990903
 */
