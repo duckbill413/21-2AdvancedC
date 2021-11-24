@@ -13,10 +13,12 @@ int main()
     struct student st[50];
     int n;
     scanf("%d", &n);
+    getchar();
     double avg;
     for (struct student *p = st; p < st + n; p++)
     {
         scanf("%s %d %d %d", p->name, &p->test1, &p->test2, &p->test3);
+        getchar();
         avg = (p->test1 + p->test2 + p->test3) / 3.0;
         p->avg = avg;
         if (avg >= 90)
@@ -34,3 +36,9 @@ int main()
 
     return 0;
 }
+
+/*
+2
+Anna 55 60 80
+Jane 90 95 98
+*/

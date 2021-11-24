@@ -1,81 +1,79 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#define MAX_NUM 100
 
 typedef struct people
 {                   //연락처 구조체
     char name[21];  //이름
     char phone[16]; //전화번호
     char birth[9];  //생년월일
-} People;
+} TEL;
 
-void insert(People *pe, int *cnt);
-void sort(People *pe, int *cnt);
-void delete (People *pe, int *cnt);
-void searchBirth(People *pe, int *cnt);
-void show(People *pe, int *cnt);
+void insert(TEL *pe, int *cnt, int max_num);
+void sort(TEL *pe, int *cnt);
+void delete (TEL *pe, int *cnt);
+void searchBirth(TEL *pe, int *cnt);
+void show(TEL *pe, int *cnt);
 
 int main()
 {
-    People pe[100]; // 100명의 정보 저장 가능
+    TEL pe[MAX_NUM]; // MAX_NUM명의 정보 저장 가능
     //안내 인터페이스
     int select;
-    int cnt = 0;
-    while (1)
+    int cnt = 0;      //전체 인원수 변수
+    int maintain = 1; // while문 반복을 위한 변수
+    while (maintain)
     {
         printf("*****Menu*****\n");
         printf("<1.Registration><2.ShowAll><3.Delete><4.FindByBirth><5.Exit>\n");
         printf("Enter_the_menu_number:");
         scanf("%d", &select);
         getchar();
-        if (select == 1) // Registration
+
+        switch (select)
         {
-            if (cnt > 100) //최대 저장 개수 초과
-            {
-                printf("OVERFLOW\n");
-                continue;
-            }
-            insert(pe, &cnt); //자료 입력 및 정렬 수행
-        }
-        else if (select == 2) // ShowAll
-        {
-            show(pe, &cnt);
-        }
-        else if (select == 3) // delete
-        {
-            if (cnt == 0) //저장된 정보가 없을때
-            {
-                printf("NO MEMBER\n");
-                continue; //처음 메뉴로 이동
-            }
-            delete (pe, &cnt);
-        }
-        else if (select == 4) //생일월 찾기
-        {
-            searchBirth(pe, &cnt);
-        }
-        else if (select == 5) //종료
+        case 1:
+            insert(pe, &cnt, MAX_NUM);
             break;
+        case 2:
+            show(pe, &cnt);
+            break;
+        case 3:
+            delete (pe, &cnt);
+            break;
+        case 4:
+            searchBirth(pe, &cnt);
+            break;
+        case 5:
+            maintain = 0;
+            break;
+        }
     }
 }
 
-void insert(People *pe, int *cnt)
+void insert(TEL *pe, int *cnt, int max_num)
 {
-    printf("Name:"); // 고정
-    scanf("%s", pe[*cnt].name);
-    getchar();
-    printf("Phone_number:"); // 고정
-    scanf("%s", pe[*cnt].phone);
-    getchar();
-    printf("Birth:"); //고정
-    scanf("%s", pe[*cnt].birth);
-    getchar();
-    (*cnt)++;                   //인원수 증가
-    printf("<< %d >>\n", *cnt); //입력된 인원수
-    sort(pe, cnt);              //오름차순 정렬
+    if (*cnt >= max_num) //최대저장개수 초과
+        printf("OVERFLOW\n");
+    else
+    {
+        printf("Name:");            // 고정
+        scanf("%s", pe[*cnt].name); // name 입력
+        getchar();
+        printf("Phone_number:");     // 고정
+        scanf("%s", pe[*cnt].phone); // phone 입력
+        getchar();
+        printf("Birth:");            //고정
+        scanf("%s", pe[*cnt].birth); // birth입력
+        getchar();
+        (*cnt)++;                   //인원수 증가
+        printf("<< %d >>\n", *cnt); //입력된 인원수
+        sort(pe, cnt);              //오름차순 정렬
+    }
 }
 
-void sort(People *pe, int *cnt)
+void sort(TEL *pe, int *cnt)
 {
     for (int i = 0; i < *cnt - 1; i++) //버블 정렬
     {
@@ -83,7 +81,7 @@ void sort(People *pe, int *cnt)
         {
             if (strcmp(pe[j].name, pe[j + 1].name) > 0) //이름순으로 정렬
             {
-                People tmp = pe[j];
+                TEL tmp = pe[j];
                 pe[j] = pe[j + 1];
                 pe[j + 1] = tmp;
             }
@@ -91,37 +89,44 @@ void sort(People *pe, int *cnt)
     }
 }
 
-void show(People *pe, int *cnt) //전체 멤버 보기
+void show(TEL *pe, int *cnt) //전체 멤버 보기
 {
     for (int i = 0; i < *cnt; i++)
     {
         printf("%s %s %s\n", pe[i].name, pe[i].phone, pe[i].birth); //전체 멤버 출력
     }
 }
-void delete (People *pe, int *cnt) //멤버 삭제
+void delete (TEL *pe, int *cnt) //멤버 삭제
 {
-    printf("Name:"); // 고정
-    char tmp[21];
-    scanf("%s", tmp); //이름 입력 받기
-    getchar();
-
-    int found = 0;
-    for (int i = 0; i < *cnt; i++)
+    if (*cnt == 0) //저장된 정보가 없을때
     {
-        if (!strcmp(pe[i].name, tmp)) //일치한 이름 존재 할시
+        printf("NO MEMBER\n");
+    }
+    else
+    {
+        printf("Name:"); // 고정
+        char tmp[21];
+        scanf("%s", tmp); //이름 입력 받기
+        getchar();
+
+        int found = 0;
+        for (int i = 0; i < *cnt; i++)
         {
-            found = 1;
+            if (!strcmp(pe[i].name, tmp)) //일치한 이름 존재 할시
+            {
+                found = 1;
+            }
+            if (found)
+            {
+                pe[i] = pe[i + 1]; //존재 부터 끝까지 멤버를 하나씩 당겨온다.
+            }
         }
         if (found)
-        {
-            pe[i] = pe[i + 1]; //존재 부터 끝까지 멤버를 하나씩 당겨온다.
-        }
+            (*cnt)--; //개수 하나 감소
     }
-    if (found)
-        (*cnt)--; //개수 하나 감소
 }
 
-void searchBirth(People *pe, int *cnt) //생일 월 찾기
+void searchBirth(TEL *pe, int *cnt) //생일 월 찾기
 {
     printf("Birth:"); // 고정
     int tmp;
