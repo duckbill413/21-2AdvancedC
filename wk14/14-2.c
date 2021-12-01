@@ -2,12 +2,12 @@
 #include <string.h>
 int main()
 {
-    FILE *fp;
+    FILE *fp = NULL;
     fp = fopen("test1.txt", "r");
     if (fp == NULL)
         return -1;
 
-    FILE *fpout;
+    FILE *fpout = NULL;
     fpout = fopen("test2.txt", "w");
     if (fpout == NULL)
         return -1;

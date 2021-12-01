@@ -8,7 +8,7 @@ typedef struct student
 
 int main()
 {
-    FILE *fp;
+    FILE *fp=NULL;
     fp = fopen("student.dat", "rb");
     if (fp == NULL)
         return -1;

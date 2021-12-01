@@ -9,7 +9,7 @@ typedef struct student
 
 int main()
 {
-    FILE *fp;
+    FILE *fp = NULL;
     fp = fopen("student.dat", "wb");
     if (fp == NULL)
         return -1;

@@ -2,7 +2,7 @@
 
 int main()
 {
-    FILE *fpin1, *fpin2, *fpout;
+    FILE *fpin1=NULL, *fpin2=NULL, *fpout=NULL;
     fpin1 = fopen("test4-1.txt", "r");
     if (fpin1 == NULL)
         return -1;
