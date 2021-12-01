@@ -43,22 +43,22 @@ int main()
         switch (select)
         {
         case 1:
-            insert(pe, &cnt, max_num); //자료 입력
+            insert(pe, &cnt, max_num); // 1. Registration
             break;
         case 2:
-            show(pe, &cnt);
+            show(pe, &cnt); // 2. ShowAll
             break;
         case 3:
-            delete (pe, &cnt);
+            del(pe, &cnt); // 3. Delete
             break;
         case 4:
-            searchBirth(pe, &cnt);
+            searchBirth(pe, &cnt); // 4. FindByBirth
             break;
         case 5:
-            ReqFromFile(pe, &cnt, max_num);
+            ReqFromFile(pe, &cnt, max_num); // 5. ReqFromFile
             break;
         case 6:
-            saveFile(pe, &cnt);
+            saveFile(pe, &cnt); // 6. Exit
             maintain = 0;
             break;
         }
@@ -86,16 +86,16 @@ void insert(TEL **pe, int *cnt, int max_num)
         TEL *put = *(pe + *cnt);
 
         char name[101] = {0}, phone[101] = {0}, birth[101] = {0}; //임시로 입력 받을 배열
-        printf("Name:");                                          // 고정
+        printf("Name:");
         scanf("%s", name);
         getchar();
-        printf("Phone_number:"); // 고정
+        printf("Phone_number:");
         scanf("%s", phone);
         getchar();
-        printf("Birth:"); //고정
+        printf("Birth:");
         scanf("%s", birth);
         getchar();
-
+        //자료를 입력
         put->name = (char *)malloc(sizeof(char) * (strlen(name) + 1));
         put->phone = (char *)malloc(sizeof(char) * (strlen(phone) + 1));
         put->birth = (char *)malloc(sizeof(char) * (strlen(birth) + 1));
@@ -103,7 +103,7 @@ void insert(TEL **pe, int *cnt, int max_num)
         strcpy(put->name, name);
         strcpy(put->phone, phone);
         strcpy(put->birth, birth);
-
+        //구조체에 자료값 복사
         (*cnt)++;                   //인원수 증가
         printf("<< %d >>\n", *cnt); //입력된 인원수
         sort(pe, cnt);              //입력된 수 만큼 정렬하여 준다.
@@ -128,7 +128,7 @@ void sort(TEL **pe, int *cnt)
 
 void show(TEL **pe, int *cnt)
 {
-    for (TEL **p = pe; p < pe + *cnt; p++)
+    for (TEL **p = pe; p < pe + *cnt; p++) //모든 구조체의 항 출력
         printf("%s %s %s\n", (*p)->name, (*p)->phone, (*p)->birth);
 }
 
@@ -140,54 +140,56 @@ void delete (TEL **pe, int *cnt)
     {
         printf("Name:"); // 고정
         char tmp[21];
-        scanf("%s", tmp);
+        scanf("%s", tmp); //삭제할 이름 입력
         getchar();
 
         int found = 0;
         TEL **p;
         for (p = pe; p < pe + *cnt; p++)
         {
-            if (!strcmp((*p)->name, tmp))
+            if (!strcmp((*p)->name, tmp)) //삭제할 이름과 동일 인물 발견
             {
-                found = 1;
+                found = 1; //동일인물 발견시 found = 1
                 break;
             }
         }
 
-        if (found)
+        if (found) //동일인물 발견시 실행
         {
-            for (TEL **q = p; q < pe + *cnt - 1; q++)
+            for (TEL **q = p; q < pe + *cnt - 1; q++) //마지막 전의 항까지 실행
             {
                 (*q)->name = (char *)realloc((*q)->name, sizeof(char) * (strlen((*(q + 1))->name) + 1));
                 (*q)->phone = (char *)realloc((*q)->phone, sizeof(char) * (strlen((*(q + 1))->phone) + 1));
                 (*q)->birth = (char *)realloc((*q)->birth, sizeof(char) * (strlen((*(q + 1))->birth) + 1));
-
+                //자료 입력을 위하여 다음 항의 크기만큼 크기를 재할당 해준다.
                 strcpy((*q)->name, (*(q + 1))->name);
                 strcpy((*q)->phone, (*(q + 1))->phone);
                 strcpy((*q)->birth, (*(q + 1))->birth);
+                //다음항의 자료를 복사해 온다.
             }
             (*cnt)--;
             free(pe[*cnt]->name);
             free(pe[*cnt]->phone);
             free(pe[*cnt]->birth);
             free(pe[*cnt]);
+            //마지막 항의 구조체와 그 멤버를 동적할당 해제하여 준다.
         }
     }
 }
 
 void searchBirth(TEL **pe, int *cnt)
 {
-    printf("Birth:"); // 고정
+    printf("Birth:");
     int tmp;
-    scanf("%d", &tmp);
+    scanf("%d", &tmp); //찾을 생일을 입력
     getchar();
 
     for (int i = 0; i < *cnt; i++)
     {
         int month = 0;
         for (char *search = pe[i]->birth + 4; search < pe[i]->birth + 6; search++)
-            month = month * 10 + (*search - '0');
-        if (month == tmp)
+            month = month * 10 + (*search - '0'); //생일의 월이 있는 5,6번 문자를 이용하여 월 계산
+        if (month == tmp)                         //생일인 월이 같을 경우 출력
             printf("%s %s %s\n", pe[i]->name, pe[i]->phone, pe[i]->birth);
     }
 }
@@ -195,19 +197,20 @@ void searchBirth(TEL **pe, int *cnt)
 void ReqFromFile(TEL **pe, int *cnt, int max_num)
 {
     FILE *fp = NULL;
-    fp = fopen("PHONE_BOOK.txt", "r");
-    if (fp != NULL)
+    fp = fopen("PHONE_BOOK.txt", "r"); // PHONE_BOOK.txt를 read한다.
+    if (fp != NULL)                    // PHONE_BOOK.txt가 존재할 경우 실행
     {
         while (1)
         {
-            if (*cnt >= max_num)
+            if (*cnt >= max_num) //입력 개수 > max_num이 되려하면 OVERFLOW 출력과 함께 종료
             {
                 printf("OVERFLOW\n");
                 break;
             }
             char name[101] = {0}, phone[101] = {0}, birth[101] = {0};
-            fscanf(fp, "%s %s %s", name, phone, birth);
-            if (feof(fp))
+            //자료를 임시로 입력 받을 배열 선언
+            fscanf(fp, "%s %s %s", name, phone, birth); //파일로 부터 자료값을 읽어 온다.
+            if (feof(fp))                               //입력 받은 자료가 없을 경우 종료
                 break;
 
             *(pe + *cnt) = NULL;
@@ -221,152 +224,22 @@ void ReqFromFile(TEL **pe, int *cnt, int max_num)
             strcpy(put->name, name);
             strcpy(put->phone, phone);
             strcpy(put->birth, birth);
-
-            (*cnt)++;
+            //자료를 구조체에 복사한다.
+            (*cnt)++; //입력 개수 +1
         }
-        sort(pe, cnt);
-        fclose(fp);
+        sort(pe, cnt); //입력받은 모든 자료를 정렬
+        fclose(fp);    //파일입출력 종료
     }
 }
 
 void saveFile(TEL **pe, int *cnt)
 {
     FILE *fp = NULL;
-    fp = fopen("PHONE_BOOK.txt", "w");
-    if (fp != NULL)
+    fp = fopen("PHONE_BOOK.txt", "w"); // PHONE_BOOK.txt파일을 write모드로 연다
+    if (fp != NULL)                    //파일 열시 성공시 실행
     {
-        for (TEL **p = pe; p < pe + *cnt; p++)
+        for (TEL **p = pe; p < pe + *cnt; p++) //구조체 정보를 파일에 입력
             fprintf(fp, "%s %s %s\n", (*p)->name, (*p)->phone, (*p)->birth);
     }
-    fclose(fp);
+    fclose(fp); //파일입출력 종료
 }
-/*case1 입력)
-3
-1
-Hong
-01111112222
-20000101
-1
-KimEunJoo
-222111333
-19960303
-1
-HanGeul
-010222333
-19980101
-
-5
-1
-Hong
-01111112222
-20000101
-1
-KimEunJoo
-222111333
-19960303
-1
-HanGeul
-010222333
-19980101
-1
-Galma
-010019310931305
-19970703
-1
-Mahima
-010023982087
-20030103
-
-case2 입력)
-3
-1
-HongGilDong
-01111112222
-20000101
-1
-KimJoo
-222111333
-19960303
-1
-Han
-010222333
-19980101
-1
-5
-
-case3 입력)
-5
-1
-Hong
-01111112222
-20000101
-1
-KimEunJoo
-222111333
-19960303
-1
-HanGeul
-010222333
-19980101
-1
-Galma
-010019310931305
-19970703
-1
-Mahima
-010023982087
-20030103
-2
-4
-3
-4
-1
-2
-1
-2
-4
-7
-2
-3
-Hangeul
-2
-3
-Mahima
-2
-3
-Galma
-2
-1
-naheun
-010389292838
-19900430
-2
-1
-Anna
-01092833394
-19990903
-
-case4입력)
-//step3
-5
-1
-Kim
-00000000000
-19980101
-1
-Gang
-11101010101
-19940101
-1
-Park
-222333330101
-20000101
-2
-6
-
--->case5(case4 실행후 사용)
-5
-5
-2
-6
-*/
