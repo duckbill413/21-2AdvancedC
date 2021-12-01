@@ -6,6 +6,9 @@
 # Prerequisites
 *.d
 
+### tempfile ###
+tempCodeRunnerFile.*
+
 # Object files
 *.o
 *.ko
